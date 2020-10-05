@@ -1,65 +1,93 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import {
+  FormContainer,
+  HeaderContainer,
+  HeaderText,
+  LogoImage,
+  TextField,
+  Header,
+  GenerateButton,
+} from "../styles/home";
+import { useState } from "react";
+import axios from "axios";
+
+const theme = createMuiTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#ffffff",
+    },
+  },
+});
 
 export default function Home() {
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/generate", {
+        from,
+        to,
+      });
+
+      setFrom("");
+      setTo("");
+      setSuccessMessage(data.message);
+    } catch (err) {
+      console.log("erro:", err.message);
+    }
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <ThemeProvider theme={theme}>
+      <div>
+        <Head>
+          <title>Hidden Short</title>
+          <link rel="icon" href="/favicon.ico" />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
+        </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+        <Header>
+          <HeaderContainer>
+            <LogoImage src="/assets/logo.svg" />
+            <HeaderText>
+              A way to hide url that you not want show to others.
+            </HeaderText>
+            <FormContainer onSubmit={handleSubmit}>
+              <TextField
+                value={from}
+                onChange={(ev) => setFrom(ev.target.value)}
+                size="small"
+                label="Url to show"
+                variant="outlined"
+              />
+              <TextField
+                value={to}
+                onChange={(ev) => setTo(ev.target.value)}
+                size="small"
+                label="Url to hide"
+                variant="outlined"
+              />
+              <GenerateButton size="small" variant="contained" type="submit">
+                Generate
+              </GenerateButton>
+            </FormContainer>
+            {successMessage}
+          </HeaderContainer>
+        </Header>
+      </div>
+    </ThemeProvider>
+  );
 }
