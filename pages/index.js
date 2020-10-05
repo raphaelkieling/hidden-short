@@ -1,5 +1,6 @@
 import Head from "next/head";
 import {
+  Button,
   CircularProgress,
   createMuiTheme,
   ThemeProvider,
@@ -17,6 +18,7 @@ import {
   MainContainer,
   Navbar,
   AlertContainer,
+  LoadingContainer,
 } from "../styles/home";
 import { useState } from "react";
 import axios from "axios";
@@ -107,8 +109,10 @@ export default function Home() {
                   label="Url to hide"
                   variant="outlined"
                 />
-                {loading ? (
-                  <CircularProgress />
+                {true ? (
+                  <LoadingContainer>
+                    <CircularProgress size={30} />
+                  </LoadingContainer>
                 ) : (
                   <GenerateButton
                     size="small"
@@ -121,14 +125,18 @@ export default function Home() {
               </FormContainer>
 
               {data && data.message && (
-                <CopyToClipboard
-                  text={data.url}
-                  onCopy={() => console.log("oiii")}
+                <AlertContainer
+                  action={
+                    <CopyToClipboard text={data.url}>
+                      <Button color="inherit" size="small">
+                        Copy
+                      </Button>
+                    </CopyToClipboard>
+                  }
+                  severity={isSuccess ? "success" : "error"}
                 >
-                  <AlertContainer severity={isSuccess ? "success" : "error"}>
-                    {data.message}
-                  </AlertContainer>
-                </CopyToClipboard>
+                  {data.message}
+                </AlertContainer>
               )}
             </HeaderContainer>
           </Header>

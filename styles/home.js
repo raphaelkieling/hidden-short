@@ -78,4 +78,16 @@ export const AlertContainer = styled(Alert)`
     margin-top: 10px;
     width: 100%;
   }
-`
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 500px) {
+    &&& {
+      margin-top: 10px;
+    }
+  }
+`;
