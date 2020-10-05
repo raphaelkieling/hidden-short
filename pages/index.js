@@ -109,7 +109,7 @@ export default function Home() {
                   label="Url to hide"
                   variant="outlined"
                 />
-                {true ? (
+                {loading ? (
                   <LoadingContainer>
                     <CircularProgress size={30} />
                   </LoadingContainer>
