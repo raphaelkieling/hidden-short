@@ -2,14 +2,14 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 const config = {
-  apiKey: "AIzaSyC8RAeXPY_dynOY4OgVCK2cmTTdCMRcsec",
-  authDomain: "hidden-short.firebaseapp.com",
-  databaseURL: "https://hidden-short.firebaseio.com",
-  projectId: "hidden-short",
-  storageBucket: "hidden-short.appspot.com",
-  messagingSenderId: "767468991951",
-  appId: "1:767468991951:web:84da7d759708fd18baceba",
-  measurementId: "G-ENDCHK3QLM",
+  apiKey: process.env.FB_API_KEY,
+  authDomain: process.env.FB_AUTH_DOMAIN,
+  databaseURL: process.env.FB_DATABASE_URL,
+  projectId: process.env.FB_PROJECT_ID,
+  storageBucket: process.env.FB_STORAGE_BUCKET,
+  messagingSenderId: process.env.FB_MESSAGING_SENDER_ID,
+  appId: process.env.FB_APP_ID,
+  measurementId: process.env.FB_MEASUREMENT_ID,
 };
 
 try {

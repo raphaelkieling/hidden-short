@@ -1,11 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { firestore } from "../../utils/firebase";
 import scrapy from "html-metadata";
+import { absoluteUrl } from "../../utils";
 
 export default async (req, res) => {
   const { from, to } = req.body;
 
   const { openGraph } = await scrapy(from);
+  const { origin } = absoluteUrl(req, "localhost:3000");
 
   const data = await firestore.collection("urls").add({
     from,
@@ -18,5 +20,5 @@ export default async (req, res) => {
   });
 
   res.statusCode = 200;
-  res.json({ message: `Url criada em ${process.env.FRONT_URL}/go/${data.id}` });
+  res.json({ message: `Url criada em ${origin}/go/${data.id}` });
 };

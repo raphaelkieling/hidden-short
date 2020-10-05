@@ -9,8 +9,17 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import Head from "next/head";
+import { absoluteUrl } from "../../utils/index";
 
-function Go({ fromMetadata }) {
+function Go({ fromMetadata, to, code }) {
+  const handleGoTo = async () => {
+    await axios.post("/api/save_redirect_history", {
+      code,
+    });
+
+    window.location.replace(to);
+  };
+
   return (
     <div>
       <Head>
@@ -38,7 +47,7 @@ function Go({ fromMetadata }) {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button size="small" color="primary">
+              <Button size="small" color="primary" onClick={handleGoTo}>
                 Go
               </Button>
             </CardActions>
@@ -49,13 +58,11 @@ function Go({ fromMetadata }) {
   );
 }
 
-Go.getInitialProps = async ({ query }) => {
+Go.getInitialProps = async ({ query, req }) => {
+  const { origin } = absoluteUrl(req, "localhost:3000");
   const { code } = query;
-  const { data } = await axios.get(
-    `${process.env.API_URL}/get_info?code=${code}`
-  );
-
-  return data;
+  const { data } = await axios.get(`${origin}/api/get_info?code=${code}`);
+  return { ...data, code };
 };
 
 export default Go;
